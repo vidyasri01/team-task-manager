@@ -31,12 +31,8 @@ function Tasks() {
       status: "Pending",
       project: "",
       assignedTo: "",
+      dueDate: "",
     });
-
-  const [selectedTask, setSelectedTask] =
-    useState(null);
-
-  // FETCH DATA
 
   useEffect(() => {
 
@@ -122,7 +118,7 @@ function Tasks() {
         );
 
       await axios.post(
-        `${API}/api/tasks/create`,
+        `${API}/api/tasks`,
         {
           ...taskData,
           createdBy: user._id,
@@ -139,6 +135,7 @@ function Tasks() {
         status: "Pending",
         project: "",
         assignedTo: "",
+        dueDate: "",
       });
 
     } catch (error) {
@@ -216,11 +213,9 @@ function Tasks() {
           }
         >
           <FaHome />
-
           <span style={styles.menuText}>
             Dashboard
           </span>
-
         </div>
 
         <div
@@ -230,21 +225,16 @@ function Tasks() {
           }
         >
           <FaProjectDiagram />
-
           <span style={styles.menuText}>
             Projects
           </span>
-
         </div>
 
         <div style={styles.activeMenu}>
-
           <FaTasks />
-
           <span style={styles.menuText}>
             Tasks
           </span>
-
         </div>
 
         <div
@@ -254,24 +244,19 @@ function Tasks() {
           }
         >
           <FaUsers />
-
           <span style={styles.menuText}>
             Team
           </span>
-
         </div>
 
         <div
           style={styles.logoutBtn}
           onClick={logout}
         >
-
           <FaSignOutAlt />
-
           <span style={styles.menuText}>
             Logout
           </span>
-
         </div>
 
       </div>
@@ -309,8 +294,6 @@ function Tasks() {
               style={styles.textarea}
             />
 
-            {/* PROJECT */}
-
             <select
               name="project"
               value={taskData.project}
@@ -334,8 +317,6 @@ function Tasks() {
               ))}
 
             </select>
-
-            {/* USERS */}
 
             <select
               name="assignedTo"
@@ -361,7 +342,15 @@ function Tasks() {
 
             </select>
 
-            {/* STATUS */}
+            {/* DUE DATE */}
+
+            <input
+              type="date"
+              name="dueDate"
+              value={taskData.dueDate}
+              onChange={handleChange}
+              style={styles.input}
+            />
 
             <select
               name="status"
@@ -395,63 +384,82 @@ function Tasks() {
 
         <div style={styles.taskGrid}>
 
-          {tasks.map((task) => (
+          {tasks.map((task) => {
 
-            <div
-              key={task._id}
-              style={styles.taskCard}
-            >
+            const isOverdue =
+              task.dueDate &&
+              new Date(task.dueDate) < new Date() &&
+              task.status !== "Completed";
 
-              <h2>
-                {task.title}
-              </h2>
+            return (
 
-              <p style={styles.description}>
-                {task.description}
-              </p>
+              <div
+                key={task._id}
+                style={styles.taskCard}
+              >
 
-              <p>
-                <strong>Project:</strong>
-                {" "}
-                {task.project?.title}
-              </p>
+                <h2>
+                  {task.title}
+                </h2>
 
-              <p>
-                <strong>Assigned To:</strong>
-                {" "}
-                {task.assignedTo?.name}
-              </p>
+                <p style={styles.description}>
+                  {task.description}
+                </p>
 
-              <p>
+                <p>
+                  <strong>Project:</strong>{" "}
+                  {task.project?.title}
+                </p>
 
-                Status:
+                <p>
+                  <strong>Assigned To:</strong>{" "}
+                  {task.assignedTo?.name || "No User"}
+                </p>
 
-                <span
-                  style={{
-                    marginLeft: "10px",
+                <p>
+                  <strong>Due Date:</strong>{" "}
 
-                    color:
-                      task.status === "Completed"
+                  {task.dueDate
+                    ? new Date(
+                        task.dueDate
+                      ).toLocaleDateString()
+                    : "No Date"}
+                </p>
+
+                <p>
+
+                  <strong>Status:</strong>
+
+                  <span
+                    style={{
+                      marginLeft: "10px",
+
+                      color: isOverdue
+                        ? "red"
+                        : task.status ===
+                          "Completed"
                         ? "#10b981"
                         : "#f59e0b",
 
-                    fontWeight: "bold",
-                  }}
-                >
-                  {task.status}
-                </span>
+                      fontWeight: "bold",
+                    }}
+                  >
 
-              </p>
+                    {isOverdue
+                      ? "Overdue"
+                      : task.status}
 
-              {/* BUTTONS */}
+                  </span>
 
-              <div style={styles.buttonContainer}>
+                </p>
 
-                <button
-                  style={styles.viewBtn}
-                  onClick={() =>
-                    alert(
-                      `Task: ${task.title}
+                <div style={styles.buttonContainer}>
+
+                  <button
+                    style={styles.viewBtn}
+                    onClick={() =>
+                      alert(
+`Task: ${task.title}
 
 Description: ${task.description}
 
@@ -459,43 +467,58 @@ Project: ${task.project?.title}
 
 Assigned To: ${task.assignedTo?.name}
 
-Status: ${task.status}`
-                    )
-                  }
-                >
-                  View
-                </button>
+Due Date: ${
+  task.dueDate
+    ? new Date(task.dueDate)
+        .toLocaleDateString()
+    : "No Date"
+}
 
-                {task.status !== "Completed" && (
-
-                  <button
-                    style={styles.completeBtn}
-                    onClick={() =>
-                      markCompleted(task._id)
+Status: ${
+  isOverdue
+    ? "Overdue"
+    : task.status
+}`
+                      )
                     }
                   >
-                    Complete
+                    View
                   </button>
 
-                )}
+                  {task.status !==
+                    "Completed" && (
 
-                {role === "Admin" && (
+                    <button
+                      style={styles.completeBtn}
+                      onClick={() =>
+                        markCompleted(
+                          task._id
+                        )
+                      }
+                    >
+                      Complete
+                    </button>
 
-                  <button
-                    style={styles.deleteBtn}
-                    onClick={() =>
-                      deleteTask(task._id)
-                    }
-                  >
-                    Delete
-                  </button>
+                  )}
 
-                )}
+                  {role === "Admin" && (
+
+                    <button
+                      style={styles.deleteBtn}
+                      onClick={() =>
+                        deleteTask(task._id)
+                      }
+                    >
+                      Delete
+                    </button>
+
+                  )}
+
+                </div>
 
               </div>
-
-            </div>
-          ))}
+            );
+          })}
 
         </div>
 
@@ -578,8 +601,6 @@ const styles = {
     padding: "25px",
     borderRadius: "15px",
     marginBottom: "40px",
-    boxShadow:
-      "0 4px 10px rgba(0,0,0,0.08)",
   },
 
   input: {
@@ -588,7 +609,6 @@ const styles = {
     marginTop: "15px",
     borderRadius: "8px",
     border: "1px solid #ccc",
-    boxSizing: "border-box",
   },
 
   textarea: {
@@ -598,7 +618,6 @@ const styles = {
     borderRadius: "8px",
     border: "1px solid #ccc",
     minHeight: "100px",
-    boxSizing: "border-box",
   },
 
   createBtn: {
@@ -622,8 +641,6 @@ const styles = {
     background: "white",
     padding: "25px",
     borderRadius: "15px",
-    boxShadow:
-      "0 4px 10px rgba(0,0,0,0.08)",
   },
 
   description: {
