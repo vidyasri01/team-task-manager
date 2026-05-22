@@ -17,6 +17,7 @@ router.post("/create", async (req, res) => {
       project,
       assignedTo,
       createdBy,
+      dueDate,
     } = req.body;
 
     const task = await Task.create({
@@ -26,6 +27,7 @@ router.post("/create", async (req, res) => {
       project,
       assignedTo,
       createdBy,
+      dueDate,
     });
 
     res.status(201).json({
@@ -48,9 +50,18 @@ router.get("/", async (req, res) => {
   try {
 
     const tasks = await Task.find()
+
       .populate("project", "title")
-      .populate("assignedTo", "name email")
-      .populate("createdBy", "name email");
+
+      .populate(
+        "assignedTo",
+        "name email"
+      )
+
+      .populate(
+        "createdBy",
+        "name email"
+      );
 
     res.status(200).json(tasks);
 
@@ -96,7 +107,8 @@ router.delete("/:id", async (req, res) => {
     );
 
     res.json({
-      message: "Task deleted successfully",
+      message:
+        "Task deleted successfully",
     });
 
   } catch (error) {
