@@ -77,7 +77,7 @@ function Login() {
       if (isLogin) {
 
         const res = await axios.post(
-          "http://localhost:5000/api/auth/login",
+          "https://team-task-manager-production-813d.up.railway.app/api/auth/login",
           {
             email: formData.email,
             password: formData.password,
@@ -131,7 +131,7 @@ function Login() {
         // REGISTER
 
         await axios.post(
-          "https://team-task-manager-production-1e1e.up.railway.app/api/auth/register",
+          "https://team-task-manager-production-813d.up.railway.app/api/auth/register",
           formData
         );
 

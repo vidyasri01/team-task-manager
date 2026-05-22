@@ -14,11 +14,11 @@ function Team() {
 
   const navigate = useNavigate();
 
+  const API =
+    "https://team-task-manager-production-813d.up.railway.app";
+
   const [users, setUsers] = useState([]);
-
   const [tasks, setTasks] = useState([]);
-
-  // MODAL STATE
 
   const [selectedUser, setSelectedUser] =
     useState(null);
@@ -39,7 +39,7 @@ function Team() {
     try {
 
       const res = await axios.get(
-        "http://localhost:5000/api/auth/users"
+        `${API}/api/auth/users`
       );
 
       setUsers(res.data);
@@ -57,7 +57,7 @@ function Team() {
     try {
 
       const res = await axios.get(
-        "https://team-task-manager-production-1e1e.up.railway.app/api/tasks"
+        `${API}/api/tasks`
       );
 
       setTasks(res.data);
@@ -72,9 +72,7 @@ function Team() {
 
   const logout = () => {
 
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("user");
+    localStorage.clear();
 
     navigate("/");
   };
@@ -289,12 +287,6 @@ function Team() {
                   {selectedUser.role}
                 </span>
 
-              </p>
-
-              <p style={styles.infoText}>
-                <strong>Joined Date:</strong>
-                {" "}
-                21 May 2026
               </p>
 
               <p style={styles.infoText}>

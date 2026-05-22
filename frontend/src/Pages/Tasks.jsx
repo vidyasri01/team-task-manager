@@ -14,32 +14,29 @@ function Tasks() {
 
   const navigate = useNavigate();
 
-  const role = localStorage.getItem("role");
+  const API =
+    "https://team-task-manager-production-813d.up.railway.app";
+
+  const role =
+    localStorage.getItem("role");
 
   const [tasks, setTasks] = useState([]);
-
-  // PROJECTS + USERS
-
   const [projects, setProjects] = useState([]);
-
   const [users, setUsers] = useState([]);
 
-  // CREATE TASK STATE
-
-  const [taskData, setTaskData] = useState({
-    title: "",
-    description: "",
-    status: "Pending",
-    project: "",
-    assignedTo: "",
-  });
-
-  // MODAL
+  const [taskData, setTaskData] =
+    useState({
+      title: "",
+      description: "",
+      status: "Pending",
+      project: "",
+      assignedTo: "",
+    });
 
   const [selectedTask, setSelectedTask] =
     useState(null);
 
-  // FETCH ALL DATA
+  // FETCH DATA
 
   useEffect(() => {
 
@@ -56,7 +53,7 @@ function Tasks() {
     try {
 
       const res = await axios.get(
-        "http://localhost:5000/api/tasks"
+        `${API}/api/tasks`
       );
 
       setTasks(res.data);
@@ -74,7 +71,7 @@ function Tasks() {
     try {
 
       const res = await axios.get(
-        "http://localhost:5000/api/projects"
+        `${API}/api/projects`
       );
 
       setProjects(res.data);
@@ -92,7 +89,7 @@ function Tasks() {
     try {
 
       const res = await axios.get(
-        "http://localhost:5000/api/auth/users"
+        `${API}/api/auth/users`
       );
 
       setUsers(res.data);
@@ -125,10 +122,9 @@ function Tasks() {
         );
 
       await axios.post(
-        "http://localhost:5000/api/tasks/create",
+        `${API}/api/tasks/create`,
         {
           ...taskData,
-
           createdBy: user._id,
         }
       );
@@ -160,7 +156,7 @@ function Tasks() {
     try {
 
       await axios.put(
-        `http://localhost:5000/api/tasks/${id}`,
+        `${API}/api/tasks/${id}`,
         {
           status: "Completed",
         }
@@ -181,7 +177,7 @@ function Tasks() {
     try {
 
       await axios.delete(
-        `https://team-task-manager-production-1e1e.up.railway.app/api/tasks/${id}`
+        `${API}/api/tasks/${id}`
       );
 
       fetchTasks();
@@ -265,8 +261,6 @@ function Tasks() {
 
         </div>
 
-        {/* LOGOUT */}
-
         <div
           style={styles.logoutBtn}
           onClick={logout}
@@ -296,9 +290,7 @@ function Tasks() {
 
           <div style={styles.formContainer}>
 
-            <h2>
-              Create Task
-            </h2>
+            <h2>Create Task</h2>
 
             <input
               type="text"
@@ -317,7 +309,7 @@ function Tasks() {
               style={styles.textarea}
             />
 
-            {/* PROJECT DROPDOWN */}
+            {/* PROJECT */}
 
             <select
               name="project"
@@ -343,7 +335,7 @@ function Tasks() {
 
             </select>
 
-            {/* USER DROPDOWN */}
+            {/* USERS */}
 
             <select
               name="assignedTo"
@@ -377,6 +369,7 @@ function Tasks() {
               onChange={handleChange}
               style={styles.input}
             >
+
               <option>
                 Pending
               </option>
@@ -398,7 +391,7 @@ function Tasks() {
 
         )}
 
-        {/* TASKS */}
+        {/* TASK GRID */}
 
         <div style={styles.taskGrid}>
 
@@ -450,12 +443,24 @@ function Tasks() {
 
               </p>
 
+              {/* BUTTONS */}
+
               <div style={styles.buttonContainer}>
 
                 <button
                   style={styles.viewBtn}
                   onClick={() =>
-                    setSelectedTask(task)
+                    alert(
+                      `Task: ${task.title}
+
+Description: ${task.description}
+
+Project: ${task.project?.title}
+
+Assigned To: ${task.assignedTo?.name}
+
+Status: ${task.status}`
+                    )
                   }
                 >
                   View
@@ -528,7 +533,6 @@ const styles = {
     borderRadius: "10px",
     cursor: "pointer",
     background: "#1f2937",
-
     display: "flex",
     alignItems: "center",
   },
@@ -538,10 +542,8 @@ const styles = {
     marginBottom: "15px",
     borderRadius: "10px",
     background: "#2563eb",
-
     display: "flex",
     alignItems: "center",
-
     fontWeight: "bold",
   },
 
@@ -555,10 +557,8 @@ const styles = {
     borderRadius: "10px",
     background: "#ef4444",
     cursor: "pointer",
-
     display: "flex",
     alignItems: "center",
-
     fontWeight: "bold",
   },
 
@@ -578,7 +578,6 @@ const styles = {
     padding: "25px",
     borderRadius: "15px",
     marginBottom: "40px",
-
     boxShadow:
       "0 4px 10px rgba(0,0,0,0.08)",
   },
@@ -623,7 +622,6 @@ const styles = {
     background: "white",
     padding: "25px",
     borderRadius: "15px",
-
     boxShadow:
       "0 4px 10px rgba(0,0,0,0.08)",
   },

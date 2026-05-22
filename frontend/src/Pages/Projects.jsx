@@ -6,12 +6,16 @@ function Projects() {
 
   const navigate = useNavigate();
 
+  const API =
+    "https://team-task-manager-production-813d.up.railway.app";
+
   const [projects, setProjects] = useState([]);
 
-  const [projectData, setProjectData] = useState({
-    title: "",
-    description: "",
-  });
+  const [projectData, setProjectData] =
+    useState({
+      title: "",
+      description: "",
+    });
 
   // FETCH PROJECTS
 
@@ -26,7 +30,7 @@ function Projects() {
     try {
 
       const res = await axios.get(
-        "http://localhost:5000/api/projects"
+        `${API}/api/projects`
       );
 
       setProjects(res.data);
@@ -53,15 +57,20 @@ function Projects() {
 
     try {
 
+      const user =
+        JSON.parse(
+          localStorage.getItem("user")
+        );
+
       await axios.post(
-        "http://localhost:5000/api/projects/create",
+        `${API}/api/projects/create`,
         {
           ...projectData,
 
-          createdBy: "6a0ef1cc47898507798100bb",
+          createdBy: user._id,
 
           members: [
-            "6a0ef1cc47898507798100bb",
+            user._id,
           ],
         }
       );
@@ -90,7 +99,7 @@ function Projects() {
     try {
 
       await axios.delete(
-        `https://team-task-manager-production-1e1e.up.railway.app/api/projects/${id}`
+        `${API}/api/projects/${id}`
       );
 
       fetchProjects();
@@ -201,6 +210,7 @@ function Projects() {
 
               <p>
                 Team Members:
+
                 <span style={{
                   marginLeft: "8px",
                   fontWeight: "bold",
@@ -208,6 +218,7 @@ function Projects() {
                 }}>
                   {project.members?.length || 0}
                 </span>
+
               </p>
 
               <div style={{
@@ -216,16 +227,22 @@ function Projects() {
                 marginTop: "20px",
               }}>
 
+                {/* VIEW */}
+
                 <button
                   style={styles.viewBtn}
                   onClick={() =>
                     alert(
-                      `Project: ${project.title}\n\nDescription: ${project.description}`
+                      `Project: ${project.title}
+
+Description: ${project.description}`
                     )
                   }
                 >
                   View
                 </button>
+
+                {/* DELETE */}
 
                 <button
                   style={styles.deleteBtn}
@@ -304,7 +321,8 @@ const styles = {
     padding: "25px",
     borderRadius: "15px",
     marginBottom: "40px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
+    boxShadow:
+      "0 4px 10px rgba(0,0,0,0.08)",
   },
 
   input: {
@@ -338,7 +356,8 @@ const styles = {
 
   projectGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))",
+    gridTemplateColumns:
+      "repeat(auto-fit,minmax(320px,1fr))",
     gap: "25px",
   },
 
@@ -346,7 +365,8 @@ const styles = {
     background: "white",
     padding: "25px",
     borderRadius: "15px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
+    boxShadow:
+      "0 4px 10px rgba(0,0,0,0.08)",
   },
 
   viewBtn: {
