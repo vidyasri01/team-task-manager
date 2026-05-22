@@ -9,11 +9,11 @@ import {
 
 // IMPORT PAGES
 
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import Projects from "./pages/Projects";
-import Tasks from "./pages/Tasks";
-import Team from "./pages/Team";
+import Login from "./Pages/Login";
+import Dashboard from "./Pages/Dashboard";
+import Projects from "./Pages/Projects";
+import Tasks from "./Pages/Tasks";
+import Team from "./Pages/Team";
 
 ReactDOM.createRoot(
   document.getElementById("root")
