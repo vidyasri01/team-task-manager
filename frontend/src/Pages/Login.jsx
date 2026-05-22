@@ -131,7 +131,7 @@ function Login() {
         // REGISTER
 
         await axios.post(
-          "http://localhost:5000/api/auth/register",
+          "https://team-task-manager-production-1e1e.up.railway.app/api/auth/register",
           formData
         );
 

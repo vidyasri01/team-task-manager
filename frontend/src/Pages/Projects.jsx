@@ -90,7 +90,7 @@ function Projects() {
     try {
 
       await axios.delete(
-        `http://localhost:5000/api/projects/${id}`
+        `https://team-task-manager-production-1e1e.up.railway.app/api/projects/${id}`
       );
 
       fetchProjects();

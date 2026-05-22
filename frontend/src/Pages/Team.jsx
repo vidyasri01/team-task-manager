@@ -57,7 +57,7 @@ function Team() {
     try {
 
       const res = await axios.get(
-        "http://localhost:5000/api/tasks"
+        "https://team-task-manager-production-1e1e.up.railway.app/api/tasks"
       );
 
       setTasks(res.data);

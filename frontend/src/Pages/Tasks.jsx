@@ -181,7 +181,7 @@ function Tasks() {
     try {
 
       await axios.delete(
-        `http://localhost:5000/api/tasks/${id}`
+        `https://team-task-manager-production-1e1e.up.railway.app/api/tasks/${id}`
       );
 
       fetchTasks();
